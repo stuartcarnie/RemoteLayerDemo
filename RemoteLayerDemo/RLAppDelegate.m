@@ -75,9 +75,7 @@
 
     // Beginning in OS X 10.9, this is necessary to get remote layers to work
     // See discussion in https://github.com/krevis/RemoteLayerDemo/issues/2
-    if ([_view respondsToSelector:@selector(setLayerUsesCoreImageFilters:)]) {
-        _view.layerUsesCoreImageFilters = YES;
-    }
+    _view.layerUsesCoreImageFilters = YES;
 }
 
 - (IBAction)getRemoteLayer:(id)sender
