@@ -37,6 +37,8 @@
 
 /* Begin PBXFileReference section */
 		056F9B7A2270CF6000DEFBC2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		056F9B7D22714B3E00DEFBC2 /* xpc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xpc.h; sourceTree = "<group>"; };
+		056F9B7E22714B3E00DEFBC2 /* QuartzCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QuartzCore.h; sourceTree = "<group>"; };
 		167B0A5014F0CF6200EDE639 /* RemoteLayerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RemoteLayerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		167B0A5414F0CF6200EDE639 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		167B0A5714F0CF6200EDE639 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -49,7 +51,6 @@
 		167B0A6414F0CF6200EDE639 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		167B0A6614F0CF6200EDE639 /* RLAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RLAppDelegate.h; sourceTree = "<group>"; };
 		167B0A6714F0CF6200EDE639 /* RLAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RLAppDelegate.m; sourceTree = "<group>"; };
-		167B0A6A14F0CF6300EDE639 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		167B0A7514F0CF8B00EDE639 /* com.snoize.RemoteLayerDemoService.xpc */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = com.snoize.RemoteLayerDemoService.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
 		167B0A7614F0CF8B00EDE639 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		167B0A7A14F0CF8B00EDE639 /* RemoteLayerDemoService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RemoteLayerDemoService-Info.plist"; sourceTree = "<group>"; };
@@ -83,9 +84,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		056F9B7C22714B3200DEFBC2 /* spi */ = {
+			isa = PBXGroup;
+			children = (
+				056F9B7E22714B3E00DEFBC2 /* QuartzCore.h */,
+				056F9B7D22714B3E00DEFBC2 /* xpc.h */,
+			);
+			path = spi;
+			sourceTree = "<group>";
+		};
 		167B0A4514F0CF6200EDE639 = {
 			isa = PBXGroup;
 			children = (
+				056F9B7C22714B3200DEFBC2 /* spi */,
 				167B0A5A14F0CF6200EDE639 /* RemoteLayerDemo */,
 				167B0A7814F0CF8B00EDE639 /* RemoteLayerDemoService */,
 				167B0A5314F0CF6200EDE639 /* Frameworks */,

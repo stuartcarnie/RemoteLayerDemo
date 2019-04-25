@@ -9,6 +9,7 @@
 #import "RLAppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
 #import <servers/bootstrap.h>
+#import "xpc.h"
 
 
 @interface RLAppDelegate ()
@@ -51,19 +52,7 @@
 
         xpc_connection_resume(_serviceConnection);
     }
-
-    // Get the CARemoteLayerServer and publish its port in the bootstrap namespace, so the XPC service can find it.
-    // Ideally we would just send this port to the service over XPC,
-    // but (currently) XPC can't send or receive Mach ports.
-    // This is a insecure, deprecated, but convenient way to do it.
-    CARemoteLayerServer* layerServer = [CARemoteLayerServer sharedServer];
-    kern_return_t err = bootstrap_register(bootstrap_port, "com.snoize.RemoteLayerDemo.layerServerPort", layerServer.serverPort);
-    if (err != KERN_SUCCESS) {
-        NSLog(@"bootstrap_register failed: %d", err);
-    } else {
-        NSLog(@"port published: %d", layerServer.serverPort);
-    }
-
+    
     // Set up a view with a layer in it. We'll add the remote layer to it
     // as a sublayer.
 
@@ -88,6 +77,7 @@
 
     xpc_object_t message = xpc_dictionary_create(NULL, NULL, 0);
     xpc_dictionary_set_uint64(message, "command", 1);
+    xpc_dictionary_set_mach_send(message, "mach_port", CARemoteLayerServer.sharedServer.serverPort);
 
     xpc_connection_send_message_with_reply(self.serviceConnection, message, dispatch_get_main_queue(), ^(xpc_object_t reply) {
 #if 0

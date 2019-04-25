@@ -10,6 +10,7 @@
 #include <Foundation/Foundation.h>
 #include <QuartzCore/QuartzCore.h>
 #include <servers/bootstrap.h>
+#include "xpc.h"
 
 
 static CARemoteLayerClient* sRemoteLayerClient = nil;
@@ -56,6 +57,28 @@ static void RemoteLayerDemoService_peer_event_handler(xpc_connection_t peer, xpc
                     xpc_transaction_begin();
                     sIsTransactionOpen = YES;
                 }
+                
+                //
+                if (sRemoteLayerClient == nil) {
+                    mach_port_t layerServerPort = xpc_dictionary_copy_mach_send(event, "mach_port");
+                    // Create a CARemoteLayerClient, and stuff a layer into it.
+                    sRemoteLayerClient = [[CARemoteLayerClient alloc] initWithServerPort:layerServerPort];
+                    if (!sRemoteLayerClient) {
+                        NSLog(@"Couldn't create CARemoteLayerClient");
+                    } else {
+                        CALayer* layer = sRemoteLayerClient.layer;
+                        if (!layer) {
+                            layer = [CALayer layer];
+                            layer.bounds = CGRectMake(0.f, 0.f, 100.f, 100.f);
+                            
+                            CGColorRef c = CGColorCreateGenericRGB(0.f, 1.f, 0.f, 1.f);
+                            layer.backgroundColor = c;
+                            CGColorRelease(c);
+                            
+                            sRemoteLayerClient.layer = layer;
+                        }
+                    }
+                }
 
                 // Reply with the client ID of the remote layer.
                 xpc_connection_t conn = xpc_dictionary_get_remote_connection(event);
@@ -99,6 +122,29 @@ static void RemoteLayerDemoService_peer_event_handler(xpc_connection_t peer, xpc
                 }
                 break;
             }
+                
+            case 4:
+            {
+                mach_port_t layerServerPort = xpc_dictionary_copy_mach_send(event, "mach_port");
+                // Create a CARemoteLayerClient, and stuff a layer into it.
+                sRemoteLayerClient = [[CARemoteLayerClient alloc] initWithServerPort:layerServerPort];
+                if (!sRemoteLayerClient) {
+                    NSLog(@"Couldn't create CARemoteLayerClient");
+                } else {
+                    CALayer* layer = sRemoteLayerClient.layer;
+                    if (!layer) {
+                        layer = [CALayer layer];
+                        layer.bounds = CGRectMake(0.f, 0.f, 100.f, 100.f);
+                        
+                        CGColorRef c = CGColorCreateGenericRGB(0.f, 1.f, 0.f, 1.f);
+                        layer.backgroundColor = c;
+                        CGColorRelease(c);
+                        
+                        sRemoteLayerClient.layer = layer;
+                    }
+                }
+                
+            }
         }
     }
 }
@@ -110,33 +156,6 @@ static void RemoteLayerDemoService_event_handler(xpc_connection_t peer)
     xpc_connection_set_event_handler(peer, ^(xpc_object_t event) {
         RemoteLayerDemoService_peer_event_handler(peer, event);
     });
-
-    // Look up the Mach port of the CARemoteLayerServer in the application.
-    // Ideally the app would send us this port over XPC, but XPC can't send Mach ports...
-    // So, for now, this is an insecure but straightforward way to get the port.
-    mach_port_t layerServerPort = MACH_PORT_NULL;
-    kern_return_t err = bootstrap_look_up(bootstrap_port, "com.snoize.RemoteLayerDemo.layerServerPort", &layerServerPort);
-    if (err != KERN_SUCCESS) {
-        NSLog(@"bootstrap_look_up failed: %d", err);
-    } else {
-        // Create a CARemoteLayerClient, and stuff a layer into it.
-        sRemoteLayerClient = [[CARemoteLayerClient alloc] initWithServerPort:layerServerPort];
-        if (!sRemoteLayerClient) {
-            NSLog(@"Couldn't create CARemoteLayerClient");
-        } else {
-            CALayer* layer = sRemoteLayerClient.layer;
-            if (!layer) {
-                layer = [CALayer layer];
-                layer.bounds = CGRectMake(0.f, 0.f, 100.f, 100.f);
-
-                CGColorRef c = CGColorCreateGenericRGB(0.f, 1.f, 0.f, 1.f);
-                layer.backgroundColor = c;
-                CGColorRelease(c);
-
-                sRemoteLayerClient.layer = layer;
-            }
-        }
-    }
 
     srand48(time(NULL));
 
